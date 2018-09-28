@@ -14,7 +14,7 @@ class InstalledPackageForLinux:
                     "fedora",
                     "suse"
                 ],
-                "dpkg -l | awk \'{print $2\":::::\"$3}\'\n" : [
+                "dpkg -l | awk \'{print $2\"!!!!!\"$3}\'\n" : [
                     "debian"
                 ]
         }

@@ -1,7 +1,6 @@
 #! /usr/bin/env python
 
 WORKENV = {
-        "WORKPATH" : "/root/sample.code",
-        "RESULTPATH" : "/tmp",
-        "SUPPORTOSIDLIKE" : [ "centos", "rhel", "fedora", "suse", "debian" ]
+        "WORKPATH" : "/root/remote-get-hostinfo",
+        "RESULTPATH" : "/tmp"
 }
