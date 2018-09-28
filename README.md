@@ -4,8 +4,8 @@ This code is utilized to obtain information from remote Linux Hosts.
 
 The directory structure look like below.
 
-------- key.d            : you need insert RSA private key to access Linux hosts
-------- var ----- common ----- bash_command.py
+=== key.d            : you need insert RSA private key to access Linux hosts
+=== var === common === bash_command.py
             |            |---- common.py
             |---- app ----- installedPackageForLinux.py
 | env.py                 : you need change with your directory path
