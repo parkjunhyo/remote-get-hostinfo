@@ -1,16 +1,15 @@
 # remote-get-hostinfo
 
 This code is utilized to obtain information from remote Linux Hosts. 
+There are some important files to use this script.
 
-The directory structure look like below.
-
-: key.d            
-  - you need insert RSA private key to access Linux hosts
-: env.py
-  - you need change with your directory path
-: hosts.py
-  - this is host imformation
-  - method type should be "key" or "password"
+1. key.d
+   you need insert RSA private key to access Linux hosts
+2. env.py
+   you need change with your directory path
+3. hosts.py
+   this is host imformation
+   method type should be "key" or "password"
 
 
 Version 
