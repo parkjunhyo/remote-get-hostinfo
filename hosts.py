@@ -1,23 +1,23 @@
 #! /usr/bin/env python
 TARGETHOSTS = [
  {
-   "host" : "172.22.0.216",
-   "port" : 38300,
+   "host" : "your-host-ip",
+   "port" : 22,
    "username" : "ubuntu",
    "method" : "key",
    "ostype" : "linux",
    "option" : {
-      "keyname" : "aws-seoul-junhyo2.park-kp1.pem"
+      "keyname" : "your-private.pem"
    }
  },
  {
-   "host" : "172.22.0.123",
+   "host" : "your-host-ip",
    "port" : 145,
    "username" : "Administrator",
    "method" : "password",
    "ostype" : "window",
    "option" : {
-      "password" : "GpTbXFpYZ?nLmN8xnrJJjYL8x7oUDjnw"
+      "password" : "your-passowrd"
    }
  },
 ]
