@@ -48,8 +48,19 @@ class InstalledPackageForLinux:
         bash_command = self.findCmd(rdict)
         cmdinstalled = CMD_GET_INSTALLED_PACKAGES()
         rmsg = cmdinstalled.runCmd(targethost, WORKENV, bash_command)
+        #
+        splitedrmsg = rmsg.split()
+        rlist = []
+        for templine in splitedrmsg:
+           splitedby = templine.split("!!!!!")
+           if len(splitedby) == 2:
+             rdict = {}
+             rdict['installedsoftwarename'] = splitedby[0]
+             rdict['version'] = splitedby[-1]
+             rlist.append(rdict)
         # write file
         fname = RESULTFULLPATH+"/installed-packages"
         f = open(fname, 'w')
-        f.write(rmsg)
+        f.write(str(rlist))
+        #f.write(rmsg)
         f.close()
