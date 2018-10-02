@@ -3,12 +3,25 @@
 from var.common.common import Common
 from var.common.bash_command import CMD_GET_OS_RELEASE
 from var.common.bash_command import CMD_GET_INSTALLED_PACKAGES
-import os, shutil, re
+from var.common.bash_command import CMD_GET_HOSTNAME
+import os, shutil, re, sys
 
 class InstalledPackageForLinux:
     def __init__(self):
+        self.outputformat = {
+            "hostname":"",
+            "ipaddress":"",
+            "osname":"",
+            "osdomain":"",
+            "osworkgroup":"",
+            "osversion":"",
+            "osid":"",
+            "osidlike":"",
+            "osarchitecture":"",
+            "installedapp":[]
+        }
         self.supportedcmd = {
-                "rpm -qa --last\n" : [
+                "rpm -qa\n" : [
                     "centos",
                     "rhel",
                     "fedora",
@@ -31,36 +44,102 @@ class InstalledPackageForLinux:
 
     def installedPackageForLinux(self, targethost, WORKENV):
         # clean and make directory for result
+        #ipstring = str(''.join(targethost['host'].strip().split('.')))
+        #RESULTFULLPATH = WORKENV['RESULTPATH']+"/"+ipstring+str(targethost['port'])
+        #if os.path.isdir(RESULTFULLPATH):
+        #  shutil.rmtree(RESULTFULLPATH)
+        #os.mkdir(RESULTFULLPATH)
+        # get IP address
+        self.outputformat["ipaddress"] = targethost["host"]
+        # get HOST name information
+        cmdhostname = CMD_GET_HOSTNAME()
+        rdict = cmdhostname.runCmd(targethost, WORKENV)
+        rdictkey = rdict.keys()
+        for keyname in rdictkey:
+            if re.compile("static hostname",re.I).search(keyname):
+               self.outputformat["hostname"] = rdict[keyname]
+               continue
+            if re.compile("architecture",re.I).search(keyname):
+               self.outputformat["osarchitecture"] = rdict[keyname]
+               continue
+        # clean and make directory for result
         ipstring = str(''.join(targethost['host'].strip().split('.')))
-        RESULTFULLPATH = WORKENV['RESULTPATH']+"/"+ipstring+str(targethost['port'])
+        RESULTFULLPATH = WORKENV['RESULTPATH']+"/"+targethost["ostype"]+"-"+self.outputformat["hostname"]+"-"+ipstring
         if os.path.isdir(RESULTFULLPATH):
           shutil.rmtree(RESULTFULLPATH)
-        os.mkdir(RESULTFULLPATH)
+        os.makedirs(RESULTFULLPATH)
         # get OS information
         cmdos = CMD_GET_OS_RELEASE()
         rdict = cmdos.runCmd(targethost, WORKENV)
+        rdictkey = rdict.keys()
+        for keyname in rdictkey:
+            if re.compile("^name",re.I).search(keyname) and len(keyname) == 4:
+               self.outputformat["osname"] = rdict[keyname]
+               continue
+            if re.compile("^version",re.I).search(keyname) and len(keyname) == 7:
+               self.outputformat["osversion"] = rdict[keyname]
+               continue
+            if re.compile("^id",re.I).search(keyname) and len(keyname) == 2:
+               self.outputformat["osid"] = rdict[keyname]
+               continue
+            if re.compile("id_like",re.I).search(keyname) and len(keyname) == 7:
+               self.outputformat["osidlike"] = rdict[keyname]
+               continue
         # write file
-        fname = RESULTFULLPATH+"/os-release"
-        f = open(fname, 'w')
-        f.write(str(rdict))
-        f.close()
+        #fname = RESULTFULLPATH+"/os-release"
+        #f = open(fname, 'w')
+        #f.write(str(rdict))
+        #f.close()
         # get matched bash command
         bash_command = self.findCmd(rdict)
         cmdinstalled = CMD_GET_INSTALLED_PACKAGES()
         rmsg = cmdinstalled.runCmd(targethost, WORKENV, bash_command)
         #
-        splitedrmsg = rmsg.split()
-        rlist = []
-        for templine in splitedrmsg:
-           splitedby = templine.split("!!!!!")
-           if len(splitedby) == 2:
-             rdict = {}
-             rdict['installedsoftwarename'] = splitedby[0]
-             rdict['version'] = splitedby[-1]
-             rlist.append(rdict)
+        if re.compile("rpm", re.I).search(bash_command):
+           splitedrmsg = rmsg.split("\r\n")
+           rlist = []
+           for templine in splitedrmsg:
+              splitedtempline = templine.split()
+              if len(splitedtempline) == 1:
+                 rdict = {}
+                 rdict["softwarename"] = splitedtempline[0]
+                 rdict["version"] = ''
+                 rlist.append(rdict)
+        elif re.compile("dpkg", re.I).search(bash_command):
+           splitedrmsg = rmsg.split("\r\n")
+           rlist = []
+           for templine in splitedrmsg:
+              splitedtempline = templine.split("!!!!!")
+              if len(splitedtempline) == 2 and len(splitedtempline[0]) and len(splitedtempline[1]):
+                 except_pattern = re.compile("[\(\)\$\?\/]", re.I)
+                 if not except_pattern.search(splitedtempline[0]) and not except_pattern.search(splitedtempline[1]):
+                    if not re.compile("name",re.I).search(splitedtempline[0]) and not re.compile("version",re.I).search(splitedtempline[1]):
+                       rdict = {}
+                       rdict["softwarename"] = splitedtempline[0]
+                       rdict["version"] = splitedtempline[1]
+                       rlist.append(rdict)
+        else:
+           pass
+        # 
+        #splitedrmsg = rmsg.split()
+        #rlist = []
+        #for templine in splitedrmsg:
+        #   splitedby = templine.split("!!!!!")
+        #   if len(splitedby) == 2 and not len(splitedby[0]) and not len(splitedby[1]):
+        #     rdict = {}
+        #     rdict['softwarename'] = splitedby[0]
+        #     rdict['version'] = splitedby[-1]
+        #     rlist.append(rdict)
+        self.outputformat["installedapp"] = rlist
         # write file
-        fname = RESULTFULLPATH+"/installed-packages"
-        f = open(fname, 'w')
-        f.write(str(rlist))
+        #fname = RESULTFULLPATH+"/installed-packages"
+        #f = open(fname, 'w')
+        #f.write(str(rlist))
         #f.write(rmsg)
+        #f.close()
+        # write file all result
+        changelistformat = [self.outputformat]
+        fname = RESULTFULLPATH+"/output.json"
+        f = open(fname, 'w')
+        f.write(str(changelistformat))
         f.close()
