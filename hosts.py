@@ -7,7 +7,7 @@ TARGETHOSTS = [
    "method" : "key",
    "ostype" : "linux",
    "option" : {
-      "keyname" : "aws-seoul-junhyo2.park-kp1.pem"
+      "keyname" : "your-private.pem"
    }
  },
  {
@@ -17,17 +17,17 @@ TARGETHOSTS = [
    "method" : "key",
    "ostype" : "linux",
    "option" : {
-      "keyname" : "aws-seoul-junhyo2.park-kp1.pem"
+      "keyname" : "your-private.pem"
    }
  },
  {
    "host" : "172.22.0.123",
    "port" : 145,
-   "username" : "Administrator",
+   "username" : "your-id",
    "method" : "password",
    "ostype" : "window",
    "option" : {
-      "password" : "GpTbXFpYZ?nLmN8xnrJJjYL8x7oUDjnw"
+      "password" : "your-password"
    }
  },
 ]
