@@ -4,7 +4,7 @@ from var.common.common import Common
 from var.common.bash_command import CMD_GET_OS_RELEASE
 from var.common.bash_command import CMD_GET_INSTALLED_PACKAGES
 from var.common.bash_command import CMD_GET_HOSTNAME
-import os, shutil, re, sys
+import os, shutil, re, sys, json
 
 class InstalledPackageForLinux:
     def __init__(self):
@@ -141,5 +141,5 @@ class InstalledPackageForLinux:
         changelistformat = [self.outputformat]
         fname = RESULTFULLPATH+"/output.json"
         f = open(fname, 'w')
-        f.write(str(changelistformat))
+        f.write(json.dumps(changelistformat))
         f.close()

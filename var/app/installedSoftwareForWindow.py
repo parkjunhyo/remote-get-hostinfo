@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 
-import os, shutil, re, sys
+import os, shutil, re, sys, json
 import wmi_client_wrapper as wmi
 
 class InstalledSoftwareForWindow:
@@ -93,6 +93,6 @@ class InstalledSoftwareForWindow:
         changelistformat = [self.outputformat]
         fname = RESULTFULLPATH+"/output.json"
         f = open(fname, 'w')
-        f.write(str(changelistformat))
+        f.write(json.dumps(changelistformat))
         f.close()
 
