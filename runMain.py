@@ -1,14 +1,13 @@
 #! /usr/bin/env python
 
-import os, sys, re
+import os, sys, re, json
 
-# {'WORKPATH': '/root/sample.code'}
-# [{'host': '54.180.9.144', 'method': 'key', 'option': {'keyname': 'aws-seoul-junhyo2.park-kp1.pem'}}]
 from env import WORKENV
 from hosts import TARGETHOSTS
-#from var.common.common import Common
 from var.app.installedPackageForLinux import InstalledPackageForLinux
 from var.app.installedSoftwareForWindow import InstalledSoftwareForWindow
+
+from var.common.mergeremoterunresult import MERGE_REMOTE_RUN_RESULT
 
 from multiprocessing import Process
 import paramiko
@@ -19,7 +18,12 @@ class Main:
         self.installedPackageForLinux = InstalledPackageForLinux()
         self.installedSoftwareForWindow = InstalledSoftwareForWindow()
 
-    def runInstance(self, inputArgvList):
+    def mergeremoterunresult(self):
+        c = MERGE_REMOTE_RUN_RESULT()
+        c.runCmd(TARGETHOSTS, WORKENV)
+
+    def runRemoteRun(self):
+        # run remote access and run command
         pList = []
         for targethost in TARGETHOSTS:
             if re.match(targethost['ostype'], "linux"):
@@ -30,9 +34,28 @@ class Main:
                continue
             pList.append(p)
             p.start()
-
         for p in pList:
             p.join()
+
+
+    def runInstance(self, inputArgvList):
+        argcountnumber = len(inputArgvList)
+        if argcountnumber > 2:
+           print "use Option help"
+           sys.exit()
+        else:
+           if argcountnumber == 2:
+              optionstring = inputArgvList[1]
+              optinlist = dir(self)
+              if optionstring not in optinlist:
+                 print optinlist
+                 print "select one of items for options"
+                 sys.exit()
+              else:
+                 getattr(self, optionstring)()
+           else: 
+              # run remote access and run command
+              self.runRemoteRun()
 
 
 

@@ -2,15 +2,12 @@
 
 import os, sys, re, json
 
-from env import WORKENV
-from hosts import TARGETHOSTS
-
-class Main:
+class MERGE_REMOTE_RUN_RESULT:
     
     def __init__(self):
         pass
-
-    def runInstance(self, inputArgvList):
+    
+    def runCmd(self, TARGETHOSTS, WORKENV):
         # search used os type
         alllistostype = []
         for itemname in TARGETHOSTS:
@@ -40,12 +37,3 @@ class Main:
         f = open(OUTPUTJSON, 'w')
         f.write(json.dumps(returnalllist))
         f.close()
-
-
-if __name__ == "__main__":
-    # Input Parameter
-    inputArgvList = sys.argv
-    # Run
-    m = Main()
-    m.runInstance(inputArgvList)
-
