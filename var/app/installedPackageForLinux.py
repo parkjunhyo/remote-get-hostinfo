@@ -42,6 +42,12 @@ class InstalledPackageForLinux:
                     return tempcmd
         return returnmsg
 
+    def removeMark(self, string_value, mark):
+        compilepattern = re.compile(mark, re.I)
+        if compilepattern.search(string_value):
+           return string_value.strip().split(mark)[1]
+        return string_value
+
     def installedPackageForLinux(self, targethost, WORKENV):
         # clean and make directory for result
         #ipstring = str(''.join(targethost['host'].strip().split('.')))
@@ -74,16 +80,16 @@ class InstalledPackageForLinux:
         rdictkey = rdict.keys()
         for keyname in rdictkey:
             if re.compile("^name",re.I).search(keyname) and len(keyname) == 4:
-               self.outputformat["osname"] = rdict[keyname]
+               self.outputformat["osname"] = self.removeMark(rdict[keyname], "\"")
                continue
             if re.compile("^version",re.I).search(keyname) and len(keyname) == 7:
-               self.outputformat["osversion"] = rdict[keyname]
+               self.outputformat["osversion"] = self.removeMark(rdict[keyname], "\"")
                continue
             if re.compile("^id",re.I).search(keyname) and len(keyname) == 2:
-               self.outputformat["osid"] = rdict[keyname]
+               self.outputformat["osid"] = self.removeMark(rdict[keyname], "\"")
                continue
             if re.compile("id_like",re.I).search(keyname) and len(keyname) == 7:
-               self.outputformat["osidlike"] = rdict[keyname]
+               self.outputformat["osidlike"] = self.removeMark(rdict[keyname], "\"")
                continue
         # write file
         #fname = RESULTFULLPATH+"/os-release"
