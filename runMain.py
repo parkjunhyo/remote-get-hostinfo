@@ -8,6 +8,7 @@ from var.app.installedPackageForLinux import InstalledPackageForLinux
 from var.app.installedSoftwareForWindow import InstalledSoftwareForWindow
 
 from var.common.mergeremoterunresult import MERGE_REMOTE_RUN_RESULT
+from var.common.mergelocalrunresult import MERGE_LOCAL_RUN_RESULT
 
 from multiprocessing import Process
 import paramiko
@@ -23,6 +24,11 @@ class Main:
            c = MERGE_REMOTE_RUN_RESULT()
            c.runCmd(TARGETHOSTS, WORKENV)
 
+    def mergelocalrunresult(self, runmethod):
+        if runmethod == 2:
+           c = MERGE_LOCAL_RUN_RESULT()
+           c.runCmd(WORKENV)
+
     def runRemoteRun(self, runmethod):
         if runmethod == 1:
            pList = []
@@ -33,8 +39,8 @@ class Main:
                   p = Process(target=self.installedSoftwareForWindow.installedSoftwareForWindow, args=(targethost, WORKENV,))
                else:
                   continue
-               pList.append(p)
                p.start()
+               pList.append(p)
            for p in pList:
                p.join()
         else:
