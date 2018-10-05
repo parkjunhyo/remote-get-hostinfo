@@ -17,6 +17,8 @@ import paramiko
 class Main:
     
     def __init__(self):
+        reload(sys)
+        sys.setdefaultencoding('utf-8')
         self.installedPackageForLinux = InstalledPackageForLinux()
         self.installedSoftwareForWindow = InstalledSoftwareForWindow()
 

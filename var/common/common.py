@@ -2,7 +2,7 @@
 
 import paramiko
 import re, time, sys
-import os, json
+import os, json, shutil, random
 from multiprocessing import Process
 
 from var.app.installedSoftwareForWindow import InstalledSoftwareForWindow
@@ -128,6 +128,15 @@ class Common:
 
     def parseWindowOrigin(self, targethost, WORKENV):
         fpath = WORKENV['LOCALRUNUTILSRCPATH']+"/"+targethost
+        #
+        tempfilename = "/tmp/"+str(random.random() + os.getpid())
+        bash_cmd = "iconv -c -t ASCII "+fpath+" > "+tempfilename+"\n"
+        os.system(bash_cmd)
+        bash_cmd = "col -b < "+tempfilename+" > "+tempfilename+".bak\n"
+        os.system(bash_cmd)
+        bash_cmd = "mv "+tempfilename+".bak "+fpath
+        os.system(bash_cmd)
+        #
         f = open(fpath, 'r')
         msglist = f.readlines()
         f.close()
@@ -166,10 +175,25 @@ class Common:
                   else:
                      prdList.append(tempdict)
             indexcount = indexcount + 1
-        # product search
+        # run to parse
         c = InstalledSoftwareForWindow()
-        print c
-        sys.exit() 
+        c.obtainWin32Computersystem(csList)
+        c.obtainWin32Operatingsystem(osList)
+        c.obtainWin32Product(prdList)
+        # Get IP address.
+        removeOringTxtstring = targethost.strip().split(".origin.txt")[0]
+        removeMarkstring = removeOringTxtstring.strip().split("-")[-1]
+        c.outputformat["ipaddress"] = removeMarkstring
+        # OutPut Path  
+        changelistformat = [c.outputformat]
+        fdir = WORKENV['RESULTPATH']+"/"+removeOringTxtstring
+        if os.path.isdir(fdir):
+           shutil.rmtree(fdir)
+        os.makedirs(fdir)
+        fname = fdir+"/output.json"
+        f = open(fname, 'w')
+        f.write(json.dumps(changelistformat))
+        f.close()
 
     def convertOriginJson(self, WORKENV):
         filenameslist = os.listdir(WORKENV['LOCALRUNUTILSRCPATH'])
