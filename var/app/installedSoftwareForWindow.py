@@ -78,8 +78,8 @@ class InstalledSoftwareForWindow:
            tmpdict = {}
            fixed_rdictkey = fixed_rdict.keys()
            for kname in fixed_rdictkey:
-               if re.compile("^packagename",re.I).search(kname) and len(kname) == 11:
-                  tmpdict["softwarename"] = fixed_rdict[kname].strip()
+               if re.compile("^caption",re.I).search(kname) and len(kname) == 7:
+                  tmpdict["caption"] = fixed_rdict[kname].strip()
                   continue
                elif re.compile("^version",re.I).search(kname) and len(kname) == 7:
                   tmpdict["version"] = fixed_rdict[kname].strip()

@@ -3,6 +3,9 @@
 import paramiko
 import re, time, sys
 import os, json
+from multiprocessing import Process
+
+from var.app.installedSoftwareForWindow import InstalledSoftwareForWindow
 
 class Common:
    
@@ -85,4 +88,100 @@ class Common:
         f = open(OUTPUTJSON, 'w')
         f.write(json.dumps(returnalllist))
         f.close() 
+
+    def conditionmatchfilelist(self, filenameslist, comppattern, targetdirname):
+        matchedlist = []
+        stringstartercomp = re.compile(": begin result from script :")
+        for fname in filenameslist:
+            if comppattern.search(fname):
+               fpath = targetdirname+"/"+fname
+               f = open(fpath, 'r')
+               msglist = f.readlines()
+               f.close()
+               if stringstartercomp.search(msglist[0]):
+                  matchedlist.append(fname)
+        return matchedlist
+
+    def findListWithPattern(self, msglist, begincpt, endcpt):
+        indexcount = 0
+        beginindex = 0
+        endindex = len(msglist)
+        for rline in msglist:
+            if re.compile(begincpt, re.I).search(rline):
+               beginindex = indexcount
+            if re.compile(endcpt, re.I).search(rline):
+               endindex = indexcount
+               break
+            indexcount = indexcount + 1
+        return msglist[beginindex+1:endindex]
+
+    def changeDictWithMark(self, tmpList, marks):
+        tempDict = {}
+        for item_i in tmpList:
+            splited_list = item_i.strip().split(marks)
+            if len(splited_list) == 2:
+               matchkey = splited_list[0].strip()
+               matchvalue = splited_list[1].strip()
+               if matchkey not in tempDict.keys():
+                  tempDict[matchkey] = matchvalue 
+        return tempDict
+
+    def parseWindowOrigin(self, targethost, WORKENV):
+        fpath = WORKENV['LOCALRUNUTILSRCPATH']+"/"+targethost
+        f = open(fpath, 'r')
+        msglist = f.readlines()
+        f.close()
+        # computersystem search
+        tmpList = self.findListWithPattern(msglist, ": begin computersystem :", ": end computersystem :")
+        csList = [self.changeDictWithMark(tmpList, "=")]
+        # operatingsystem search
+        tmpList = self.findListWithPattern(msglist, ": begin operatingsystem :",": end operatingsystem :")
+        osList = [self.changeDictWithMark(tmpList, "=")]
+        # product search
+        tmpList = self.findListWithPattern(msglist, ": begin product :",": end product :")
+        filteredlist = []
+        for tempstring in tmpList:
+            if re.compile("caption=",re.I).search(tempstring) or re.compile("version=",re.I).search(tempstring):
+               filteredlist.append(tempstring)
+        indexcount = 0
+        prdList = []
+        for tempstring in filteredlist:
+            if re.compile("caption=",re.I).search(tempstring):
+               splitedtempstring = tempstring.strip().split("=")
+               if len(splitedtempstring) == 2:
+                  tempdict = {}
+                  matchkey = splitedtempstring[0].strip() 
+                  matchvalue = splitedtempstring[1].strip() 
+                  tempdict[matchkey] = matchvalue
+                  nextstrings = filteredlist[indexcount+1]
+                  if re.compile("version=",re.I).search(nextstrings):
+                     splitednextstrings = nextstrings.strip().split("=")
+                     if len(splitednextstrings) == 2:
+                        matchkey = splitednextstrings[0].strip()
+                        matchvalue = splitednextstrings[1].strip()
+                        tempdict[matchkey] = matchvalue
+                        prdList.append(tempdict)
+                     else:
+                        prdList.append(tempdict)
+                  else:
+                     prdList.append(tempdict)
+            indexcount = indexcount + 1
+        # product search
+        c = InstalledSoftwareForWindow()
+        print c
+        sys.exit() 
+
+    def convertOriginJson(self, WORKENV):
+        filenameslist = os.listdir(WORKENV['LOCALRUNUTILSRCPATH'])
+        matchedlinuxlist = self.conditionmatchfilelist(filenameslist, re.compile("linux-", re.I), WORKENV['LOCALRUNUTILSRCPATH'])
+        matchedwindowlist = self.conditionmatchfilelist(filenameslist, re.compile("window-", re.I), WORKENV['LOCALRUNUTILSRCPATH'])
+        pList = []
+        for targethost in matchedlinuxlist:
+            pass
+        for targethost in matchedwindowlist:
+            p = Process(target=self.parseWindowOrigin, args=(targethost, WORKENV,))
+            p.start()
+            pList.append(p)
+        for p in pList:
+            p.join()
 

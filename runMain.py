@@ -8,7 +8,7 @@ from var.app.installedPackageForLinux import InstalledPackageForLinux
 from var.app.installedSoftwareForWindow import InstalledSoftwareForWindow
 
 #from var.common.mergeremoterunresult import MERGE_REMOTE_RUN_RESULT
-from var.common.mergelocalrunresult import MERGE_LOCAL_RUN_RESULT
+#from var.common.mergelocalrunresult import MERGE_LOCAL_RUN_RESULT
 from var.common.common import Common
 
 from multiprocessing import Process
@@ -25,10 +25,10 @@ class Main:
            c = Common()
            c.mergeJsonOut(TARGETHOSTS, WORKENV)
 
-    def mergelocalrunresult(self, runmethod):
+    def convertOriginJson(self, runmethod):
         if runmethod == 2:
-           c = MERGE_LOCAL_RUN_RESULT()
-           c.runCmd(WORKENV)
+           c = Common()
+           c.convertOriginJson(WORKENV)
 
     def runRemoteRun(self, runmethod):
         if runmethod == 1:

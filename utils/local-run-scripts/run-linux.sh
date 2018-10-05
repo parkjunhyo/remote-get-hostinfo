@@ -11,7 +11,7 @@ SEARCHEDHOSTNAME=$(hostnamectl | grep -i "static hostname" | awk '{print $3}')
 WF="linux-localrun-"$SEARCHEDHOSTNAME"-"$SEARCHEDIP".origin.txt"
 
 # Run Script
-echo "----- : result from script : -----" > $WF
+echo "----- : begin result from script : -----" > $WF
 echo "hostnamectl info getting.."
 echo "----- : begin hostnamectl : -----" >> $WF
 hostnamectl >> $WF
@@ -42,4 +42,4 @@ fi
 echo "----- : end product : -----" >> $WF
 
 # END
-echo "----- : end of script : -----" >> $WF
+echo "----- : end result from script : -----" > $WF
