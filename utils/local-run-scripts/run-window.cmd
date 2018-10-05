@@ -24,7 +24,7 @@ for /f "skip=1 tokens=1" %%i in ('wmic computersystem get name') do (
 :: Set file to write
 set MYIP=%MYIP: =%
 set MYCSNAME=%MYCSNAME: =%
-set WF=window-%MYCSNAME%-%MYIP%.orgin.txt
+set WF=window-localrun-%MYCSNAME%-%MYIP%.origin.txt
 echo ----- : begin result from script : ----- > %WF%
 
 :: computersystem

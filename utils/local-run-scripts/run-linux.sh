@@ -8,7 +8,7 @@ SEARCHEDIP=$(ip addr show $DEFAULTIF | grep -i 'inet ' | awk '{print $2}' | awk 
 SEARCHEDHOSTNAME=$(hostnamectl | grep -i "static hostname" | awk '{print $3}')
 
 # File Path for Result
-WF="linux-"$SEARCHEDHOSTNAME"-"$SEARCHEDIP".origin.txt"
+WF="linux-localrun-"$SEARCHEDHOSTNAME"-"$SEARCHEDIP".origin.txt"
 
 # Run Script
 echo "----- : result from script : -----" > $WF
