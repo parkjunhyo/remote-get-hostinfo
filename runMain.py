@@ -7,8 +7,9 @@ from hosts import TARGETHOSTS
 from var.app.installedPackageForLinux import InstalledPackageForLinux
 from var.app.installedSoftwareForWindow import InstalledSoftwareForWindow
 
-from var.common.mergeremoterunresult import MERGE_REMOTE_RUN_RESULT
+#from var.common.mergeremoterunresult import MERGE_REMOTE_RUN_RESULT
 from var.common.mergelocalrunresult import MERGE_LOCAL_RUN_RESULT
+from var.common.common import Common
 
 from multiprocessing import Process
 import paramiko
@@ -19,10 +20,10 @@ class Main:
         self.installedPackageForLinux = InstalledPackageForLinux()
         self.installedSoftwareForWindow = InstalledSoftwareForWindow()
 
-    def mergeremoterunresult(self, runmethod):
+    def mergeJsonOut(self, runmethod):
         if runmethod == 2:
-           c = MERGE_REMOTE_RUN_RESULT()
-           c.runCmd(TARGETHOSTS, WORKENV)
+           c = Common()
+           c.mergeJsonOut(TARGETHOSTS, WORKENV)
 
     def mergelocalrunresult(self, runmethod):
         if runmethod == 2:
@@ -58,8 +59,12 @@ class Main:
               if argcountnumber == 2:
                  optionstring = inputArgvList[1]
                  optinlist = dir(self)
-                 if optionstring not in optinlist:
-                    print optinlist
+                 newoptlist = []
+                 for optn in optinlist:
+                     if not re.compile("_").search(optn):
+                        newoptlist.append(optn)
+                 if optionstring not in newoptlist:
+                    print newoptlist
                     print "select one of items for options"
                     sys.exit()
                  else:
