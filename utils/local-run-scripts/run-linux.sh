@@ -42,4 +42,4 @@ fi
 echo "----- : end product : -----" >> $WF
 
 # END
-echo "----- : end result from script : -----" > $WF
+echo "----- : end result from script : -----" >> $WF
