@@ -22,7 +22,9 @@ class Commonutils:
               if re.compile("^"+prefixstring+"-").search(dirname):
                  if dirname not in matchedlist:
                     matchedlist.append(dirname)
+        print str("\"".join(matchedlist))+" will be merged"
         # find file and read
+        matchiplist = []
         returnalllist = []
         for dirname in matchedlist:
            OUTPUTFILEFULLPATH = WORKENV["RESULTPATH"]+"/"+dirname+"/output.json"
@@ -31,10 +33,14 @@ class Commonutils:
               rmsg = f.read()
               f.close()
               changed_json = json.loads(rmsg)
+              print changed_json
               for tempitem in changed_json:
-                 returnalllist.append(tempitem)
+                  thisip = tempitem['ipaddress']
+                  if thisip not in matchiplist:
+                     matchiplist.append(thisip)
+                     returnalllist.append(tempitem)
         # create single file
-        OUTPUTJSON = WORKENV["RESULTPATH"]+"/remote-get-hostinfo-output.json"
+        OUTPUTJSON = WORKENV["RESULTPATH"]+"/merged-output.json"
         f = open(OUTPUTJSON, 'w')
         f.write(json.dumps(returnalllist))
         f.close() 
