@@ -76,10 +76,10 @@ echo ----- : begin product : ----- >> %WF%
 for /f "usebackq delims=" %%i in (`wmic product get caption^,version^/format:list`) do (
    @echo %%i >> %rfilename%
 )
-::   if you suffer from C runtime error due to findstr.exe, remove findstr,
+:: if you suffer from C runtime error due to findstr.exe, change like below
+:: echo.%%i | findstr /v "^ECHO" >> %WF% >>>>>>>>>>>>  echo %%i >> %WF%
 for /f "delims=" %%i in (%rfilename%) do (
-::   echo.%%i | findstr /v "^ECHO" >> %WF%
-   echo %%i >> %WF%
+   echo.%%i | findstr /v "^ECHO" >> %WF%
 )
 del %rfilename%
 echo ----- : end product : ----- >> %WF%
