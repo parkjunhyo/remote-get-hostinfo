@@ -38,7 +38,13 @@ class InstalledPackageForLinux:
         for tempcmd in commandlist:
             for osname in self.supportedcmd[tempcmd]:
                 recomp = re.compile(osname, re.I)
-                if recomp.search(rdict['ID_LIKE']):
+                #
+                if 'ID_LIKE' in rdict.keys():
+                   targetIDname = 'ID_LIKE'
+                else:
+                   targetIDname = 'ID'
+                #
+                if recomp.search(rdict[targetIDname]):
                     return tempcmd
         return returnmsg
 

@@ -1,7 +1,8 @@
 #! /bin/bash
 
 # Get Local IP address
-DEFAULTIF=$(route | grep -i "default" | awk '{print $8}')
+#DEFAULTIF=$(route | grep -i "default" | awk '{print $8}')
+DEFAULTIF=$(ip route | grep -i default | awk '{print $5}')
 SEARCHEDIP=$(ip addr show $DEFAULTIF | grep -i 'inet ' | awk '{print $2}' | awk -F "[/]" '{print $1}')
 
 # Get Host Name
