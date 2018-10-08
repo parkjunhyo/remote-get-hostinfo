@@ -25,7 +25,14 @@ echo "----- : end /etc/os-release : -----" >> $WF
 
 
 # GET Linux Distribution
-ID_LIKE=$(cat /etc/os-release | grep -i id_like | awk -F"[=]" '{print $2}')
+VALUECHECK=$(cat /etc/os-release | grep -i id_like)
+if [[ $VALUECHECK ]]
+then
+   ID_LIKE=$(cat /etc/os-release | grep -i 'id_like=' | awk -F"[=]" '{print $2}')
+else
+   ID_LIKE=$(cat /etc/os-release | grep -i 'id=' | awk -F"[=]" '{print $2}')
+fi
+#ID_LIKE=$(cat /etc/os-release | grep -i id_like | awk -F"[=]" '{print $2}')
 
 # Change all captial to lower case
 LOWERCASE_IDLIKE=${ID_LIKE,,}
@@ -36,7 +43,7 @@ echo "----- : begin product : -----" >> $WF
 if [[ $ID_LIKE =~ .*"debian".* ]] || [[ $ID_LIKE =~ .*"ubuntu".* ]]
 then
   dpkg -l | awk '{print $2"!!!!!"$3}' >> $WF
-elif [[ $ID_LIKE =~ .*"rhel".* ]] || [[ $ID_LIKE =~ .*"fedora".* ]] || [[ $ID_LIKE =~ .*"centos".* ]]
+elif [[ $ID_LIKE =~ .*"rhel".* ]] || [[ $ID_LIKE =~ .*"fedora".* ]] || [[ $ID_LIKE =~ .*"centos".* ]] || [[ $ID_LIKE =~ .*"suse".* ]]
 then
   rpm -qa >> $WF
 fi
