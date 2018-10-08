@@ -22,7 +22,7 @@ class Commonutils:
               if re.compile("^"+prefixstring+"-").search(dirname):
                  if dirname not in matchedlist:
                     matchedlist.append(dirname)
-        print str("\"".join(matchedlist))+" will be merged"
+        print str("\n".join(matchedlist))+"\n .... will be merged"
         # find file and read
         matchiplist = []
         returnalllist = []
@@ -33,7 +33,6 @@ class Commonutils:
               rmsg = f.read()
               f.close()
               changed_json = json.loads(rmsg)
-              print changed_json
               for tempitem in changed_json:
                   thisip = tempitem['ipaddress']
                   if thisip not in matchiplist:
