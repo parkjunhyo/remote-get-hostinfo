@@ -16,7 +16,7 @@ Version
   - 0.1 : 201809, Installed Package information GET Possible
   - 0.2 : 201810, Local running case Possible 
 
-How to Use
+How to Use for remote access mode
 
 1. chagne to env.py for your enviromment.
    - WORKENV = {
@@ -28,25 +28,37 @@ How to Use
    - "LOCALRUNUTILSRCPATH" are used to convert and merge local result files which are copied from local host after running locally.
 
 2. Add to hosts information to access in hosts.py
-   - {
-   "host" : "54.180.9.144",
-   "port" : 22,
+   - TARGETHOSTS = [{
+   "host" : "172.22.0.216",
+   "port" : 38300,
    "username" : "ubuntu",
    "method" : "key",
+   "ostype" : "linux",
    "option" : {
-      "keyname" : "aws-seoul-junhyo2.park-kp1.pem"
+      "keyname" : "your-private.pem"
    }
-   }
-   - Most of variables are necessary. "method" should be one of "key" or "password"
-   
-3. Run "./runMain.py"
+   }]
+   - "method" should be one of "key" or "password"
+   - "ostype" should be one of "linux" or "window"
+   - "option" should has "keyname" (SSH Case, key mode) or "password" (Passowrd Case, password mode)
 
-4. After this script. I can get the result in "RESULTPATH", In default case, I use "/tmp" directory.
-   There are serveral directory. The name of directory is combined with IP address and Port number. For example, 
-   your host IP address is "175.192.3.124" and SSH port is "3294", the directory name should 17519231242394.
+3. Run one of command below.
+   - "./runMain.py" : remote access and get the result
+   - "./runMain.py convertOriginJson" : convert and parse the file which are copied from local hosts.
+   - "./runMain.py mergeJsonOut" : conver and merge all result file to create single file.
+   - For remote-run, Just run "./runMain.py" and "./runMain.py mergeJsonOut"
 
-5. Look at the reuslt directory.
-   There are some file. (Look at the Version Information) Every files are seperated by the feature.
-   
+4. After this script. I can get the result in "RESULTPATH", By default, I use "/tmp" directory for the result.
+   - Directory name should be similar with "<linux- or window->". 
+
+How to Use for local run mode
+
+1. Copy and locate the files which are obtained on local hosts after running in "LOCALRUNUTILSRCPATH"
+
+2. The bash script and batch file is located in upper directory of "LOCALRUNUTILSRCPATH".
+   There are "run-linux.sh" and "run-window.cmd". Download these file on local hosts, and run this.
+   I will get the "<linux-local or window-local>" files. I need to copy and move these file into the server.
+
+3. "./runMain.py convertOriginJson" and "./runMain.py mergeJsonOut"
 
 
