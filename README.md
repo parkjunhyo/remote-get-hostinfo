@@ -20,10 +20,12 @@ How to Use
 
 1. chagne to env.py for your enviromment.
    - WORKENV = {
-        "WORKPATH" : "/root/remote-get-hostinfo",
-        "RESULTPATH" : "/tmp"
-   }
+        "WORKPATH" : "/home/ubuntu/applications/remote-get-hostinfo",
+        "RESULTPATH" : "/tmp",
+        "LOCALRUNUTILSRCPATH" : "/home/ubuntu/applications/remote-get-hostinfo/utils/local-run-scripts/src"
+     }
    - "RESULTPATH" are used to get the result after complete this script.
+   - "LOCALRUNUTILSRCPATH" are used to convert and merge local result files which are copied from local host after running locally.
 
 2. Add to hosts information to access in hosts.py
    - {
