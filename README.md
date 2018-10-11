@@ -14,18 +14,19 @@ There are some important files to use this script.
 
 Version 
   - 0.1 : 201809, Installed Package information GET Possible
+  - 0.2 : 201810, Local running case Possible 
 
 How to Use
 
 1. chagne to env.py for your enviromment.
-   WORKENV = {
+   - WORKENV = {
         "WORKPATH" : "/root/remote-get-hostinfo",
         "RESULTPATH" : "/tmp"
    }
-   "RESULTPATH" are used to get the result after complete this script.
+   - "RESULTPATH" are used to get the result after complete this script.
 
 2. Add to hosts information to access in hosts.py
-   {
+   - {
    "host" : "54.180.9.144",
    "port" : 22,
    "username" : "ubuntu",
@@ -34,7 +35,7 @@ How to Use
       "keyname" : "aws-seoul-junhyo2.park-kp1.pem"
    }
    }
-   Most of variables are necessary. "method" should be one of "key" or "password"
+   - Most of variables are necessary. "method" should be one of "key" or "password"
    
 3. Run "./runMain.py"
 
