@@ -30,12 +30,10 @@ class InstalledPackageForLinux:
                     "fedora",
                     "suse",
                     "sles",
-                    "rpm"
                 ],
                 "dpkg -l | awk \'{print $2\"!!!!!\"$3}\'\n" : [
                     "debian",
                     "ubuntu",
-                    "lsb"
                 ]
         }
 
