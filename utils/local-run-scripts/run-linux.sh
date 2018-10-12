@@ -111,17 +111,16 @@ read -ra VAL <<< $LOWERCASE_IDLIKE
 for i in "${VAL[@]}"; do
     if [[ $i =~ .*"debian".* ]] || [[ $i =~ .*"ubuntu".* ]]
     then
-       CMDTORUN="dpkg -l | awk '{print $2"!!!!!"$3}'"
+       dpkg -l | awk '{print $2"!!!!!"$3}' >> $WF
        break;
     elif [[ $i =~ .*"rhel".* ]] || [[ $i =~ .*"redhat".* ]] || [[ $i =~ .*"fedora".* ]] || [[ $i =~ .*"centos".* ]] || [[ $i =~ .*"suse".* ]] || [[ $i =~ .*"sles".* ]]
     then
-       CMDTORUN="rpm -qa"
+       rpm -qa >> $WF
        break;
     else
        continue;
     fi
 done
-$CMDTORUN >> $WF
 echo "----- : end product : -----" >> $WF
 
 echo "----- : end result from script : -----" >> $WF
