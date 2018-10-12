@@ -55,6 +55,8 @@ class CMD_GET_OS_RELEASE:
                      bash_command = "echo NAME=$(sudo find /etc/ -iname 'centos-release' | xargs cat | awk '{if(NR==1) print $0}')\n"
                   elif re.compile(nf, re.I).search("lsb"):
                      bash_command = "echo NAME=$(sudo find /etc/ -iname 'lsb-release' | xargs cat | grep -i DISTRIB_DESCRIPTION | awk -F\"[=]\" '{if(NR==1) print $2}')\n"
+                  else:
+                     bash_command = "echo NAME=$(sudo find /etc/ -iname 'issue' | xargs cat | awk '{if(NR==1) print $0}')\n"
                   c, conn = commclass.connectSSHLogin(targethost, WORKENV)
                   rmsg = commclass.runBashAfterSSHLogin(c, conn, bash_command)
                   # validation
