@@ -15,6 +15,7 @@ class InstalledSoftwareForWindow:
             "osid":"",
             "osidlike":"",
             "osarchitecture":"",
+            "oskernal":"",
             "installedapp":[]
         }
 
