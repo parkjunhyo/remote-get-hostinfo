@@ -158,19 +158,6 @@ class Commonutils:
         c.obtainWin32Product(prdList)
         # Get IP address.
         self.getIPandPrintout(targethost, c, WORKENV)
-        #removeOringTxtstring = targethost.strip().split(".origin.txt")[0]
-        #removeMarkstring = removeOringTxtstring.strip().split("-")[-1]
-        #c.outputformat["ipaddress"] = removeMarkstring
-        # OutPut Path  
-        #changelistformat = [c.outputformat]
-        #fdir = WORKENV['RESULTPATH']+"/"+removeOringTxtstring
-        #if os.path.isdir(fdir):
-        #   shutil.rmtree(fdir)
-        #os.makedirs(fdir)
-        #fname = fdir+"/output.json"
-        #f = open(fname, 'w')
-        #f.write(json.dumps(changelistformat))
-        #f.close()
  
     def parseLinuxOrigin(self, targethost, WORKENV):
         fpath, msglist = self.readASCIIstring(targethost, WORKENV) 
@@ -184,10 +171,15 @@ class Commonutils:
         c.obtainOSRelease(rdict)
         bash_command = c.findCmd(rdict)
         #
-        tmpList = self.findListWithPattern(msglist, ": begin product :", "----- : end product : -----")
+        tmpList = self.findListWithPattern(msglist, ": begin product :", ": end product :")
         rmsg = "\r\n".join(tmpList)
-        # run to parse
+        # 
         c.obtainProduct(bash_command, rmsg)
+        # 
+        tmpList = self.findListWithPattern(msglist, ": begin kernal :", ": end kernal :")
+        rmsg = "\r\n".join(tmpList)
+        c.obtainKernal(rmsg)
+        #
         self.getIPandPrintout(targethost, c, WORKENV)
 
 

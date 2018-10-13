@@ -93,7 +93,7 @@ class InstalledPackageForLinux:
               splitedtempline = templine.split()
               if len(splitedtempline) == 1:
                  rdict = {}
-                 rdict["softwarename"] = splitedtempline[0]
+                 rdict["softwarename"] = splitedtempline[0].strip()
                  rdict["version"] = ''
                  rlist.append(rdict)
         elif re.compile("dpkg", re.I).search(bash_command):
@@ -106,17 +106,18 @@ class InstalledPackageForLinux:
                  if not except_pattern.search(splitedtempline[0]) and not except_pattern.search(splitedtempline[1]):
                     if not re.compile("name",re.I).search(splitedtempline[0]) and not re.compile("version",re.I).search(splitedtempline[1]):
                        rdict = {}
-                       rdict["softwarename"] = splitedtempline[0]
-                       rdict["version"] = splitedtempline[1]
+                       rdict["softwarename"] = splitedtempline[0].strip()
+                       rdict["version"] = splitedtempline[1].strip()
                        rlist.append(rdict)
         else:
            pass
         self.outputformat["installedapp"] = rlist
 
     def obtainKernal(self, rmsg):
-        for texts in rmsg.split('\r\n')[1:-1]:
+        #for texts in rmsg.split('\r\n')[1:-1]:
+        for texts in rmsg.split('\r\n'):
             splitedtexts = texts.split("=")
-            if len(splitedtexts) == 2:
+            if len(splitedtexts) == 2 and not re.compile("echo",re.I).search(texts):
                tempkeyname = splitedtexts[0].strip()
                if re.compile("oskernal",re.I).search(tempkeyname):
                   self.outputformat[tempkeyname] = splitedtexts[1].strip()
