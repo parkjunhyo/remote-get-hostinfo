@@ -8,7 +8,7 @@ class CMD_GET_OS_RELEASE:
     def parseMsg(self, rmsg, tempdict, option):
         for texts in rmsg.split('\r\n')[1:-1]:
             splitedtexts = texts.split("=")
-            if len(splitedtexts) == 2:
+            if len(splitedtexts) == 2 and not re.compile("echo",re.I).search(texts):
                if option == 1:
                   tempdict[splitedtexts[0].strip()] = splitedtexts[1].strip()
                elif option == 2:
@@ -110,7 +110,7 @@ class CMD_GET_HOSTNAME:
     def parseMsg(self, rmsg, tempdict):
         for texts in rmsg.split('\r\n')[1:-1]:
             splitedtexts = texts.split(":")
-            if len(splitedtexts) == 2:
+            if len(splitedtexts) == 2 and not re.compile("echo",re.I).search(texts):
                tempdict[splitedtexts[0].strip()] = splitedtexts[1].strip()
         return tempdict
 
