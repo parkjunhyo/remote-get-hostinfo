@@ -17,7 +17,12 @@ SEARCHEDIP=$(ip addr show $DEFAULTIF | grep -i 'inet ' | awk '{print $2}' | awk 
 ############### GET HOST NAME ##########
 if [[ $HOSTCTLCMDSTATUS == 1 ]]
 then
-   SEARCHEDHOSTNAME=$(hostnamectl | grep -i "static hostname" | awk '{print $3}')
+   if [[ $(hostnamectl) ]]
+   then
+      SEARCHEDHOSTNAME=$(hostnamectl | grep -i "static hostname" | awk '{print $3}')
+   else
+      SEARCHEDHOSTNAME=$(hostname)
+   fi
 else
    SEARCHEDHOSTNAME=$(hostname)
 fi
@@ -32,7 +37,19 @@ echo "hostnamectl (hostname) info getting.."
 echo "----- : begin hostnamectl : -----" >> $WF
 if [[ $HOSTCTLCMDSTATUS == 1 ]]
 then
-   hostnamectl >> $WF
+   if [[ $(hostnamectl) ]]
+   then
+      hostnamectl >> $WF
+   else
+      echo Static hostname: $(hostname) >> $WF
+      ARCHSTR=$(uname -i)
+      LOWER_ARCHSTR=${ARCHSTR,,}
+      if [[ $LOWER_ARCHSTR =~ .*"unknown".* ]]
+      then
+         ARCHSTR=$(uname -m)
+      fi
+      echo Architecture: $ARCHSTR >> $WF
+   fi
 else
    echo Static hostname: $(hostname) >> $WF
    ARCHSTR=$(uname -i)
