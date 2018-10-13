@@ -55,9 +55,9 @@ then
    TEMPSTATUS=$(cat /etc/os-release | grep -i id_like)
    if [[ $TEMPSTATUS ]]
    then
-      IDLIKE_TEMP=$(cat /etc/os-release | grep -i 'id_like=' | awk -F"[=]" '{print $2}')
+      IDLIKE_TEMP=$(cat /etc/os-release | grep -i '^id_like=' | awk -F"[=]" '{print $2}')
    else
-      IDLIKE_TEMP=$(cat /etc/os-release | grep -i 'id=' | awk -F"[=]" '{print $2}')
+      IDLIKE_TEMP=$(cat /etc/os-release | grep -i '^id=' | awk -F"[=]" '{print $2}')
    fi
    IDLIKE_TEMP_LOWER=${IDLIKE_TEMP,,}
 else
