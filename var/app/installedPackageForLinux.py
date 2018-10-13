@@ -73,16 +73,16 @@ class InstalledPackageForLinux:
         rdictkey = rdict.keys()
         for keyname in rdictkey:
             if re.compile("^name",re.I).search(keyname) and len(keyname) == 4:
-               self.outputformat["osname"] = self.removeMark(rdict[keyname], "\"")
+               self.outputformat["osname"] = self.removeMark(rdict[keyname], "\"").strip()
                continue
             if re.compile("^version",re.I).search(keyname) and len(keyname) == 7:
-               self.outputformat["osversion"] = self.removeMark(rdict[keyname], "\"")
+               self.outputformat["osversion"] = self.removeMark(rdict[keyname], "\"").strip()
                continue
             if re.compile("^id",re.I).search(keyname) and len(keyname) == 2:
-               self.outputformat["osid"] = self.removeMark(rdict[keyname], "\"")
+               self.outputformat["osid"] = self.removeMark(rdict[keyname], "\"").strip()
                continue
             if re.compile("id_like",re.I).search(keyname) and len(keyname) == 7:
-               self.outputformat["osidlike"] = self.removeMark(rdict[keyname], "\"")
+               self.outputformat["osidlike"] = self.removeMark(rdict[keyname], "\"").strip()
                continue
 
     def obtainProduct(self, bash_command, rmsg):
